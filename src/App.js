@@ -1,16 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useSwapiApi } from './hooks'
 import logo from './assets/starwars-logo.png';
-import sticker from './assets/sticker.png';
 import './App.css';
 
 import MovieDropDown from './components/MovieDropDown'
 
 function App() {
+
+  const [selectedMovie, setSelectedMovie] = useState(null);
+  const { isLoading, hasError, data: movies } = useSwapiApi();
+
   return (
     
     <div className="wrapper">
       <div className="main">
-        <img src={sticker} alt="Star WArs logo" />
+        <img src={logo} alt="Star Wars logo" />
         <MovieDropDown placeholder="Select a Movie"/>
         <MovieDropDown placeholder="Filter Gender"/>
         <table>
