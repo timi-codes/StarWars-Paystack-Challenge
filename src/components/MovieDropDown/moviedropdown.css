@@ -5,7 +5,7 @@
 
 
 .custom-select select{
-    /* width: 100%; */
+    /* width: 50%; */
     font-size: 15px;
     color: white;
     -webkit-text-fill-color: white; /* Will override color (regardless of order) */

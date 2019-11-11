@@ -15,17 +15,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 1rem solid rgba(255, 204, 24, 0.7);
-  padding: 4rem 0;
+  border: 1rem double rgba(255, 204, 24, 0.7);
 }
 
 .main img{
-  height: 4rem;
+  height: 5rem;
+  margin-top: 4rem
 }
 
 table {
   z-index: 5;
   margin-top: 2rem;
+  margin-bottom: 4rem
+
   /* border: 1px solid white; */
   /* width: 40%; */
 }

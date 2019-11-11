@@ -1,140 +1,62 @@
 import React, { useState } from 'react';
-import { useSwapiApi } from './hooks'
+import { useSwapiApi, useSelectedMovie} from './hooks'
 import logo from './assets/starwars-logo.png';
 import './App.css';
 
 import MovieDropDown from './components/MovieDropDown'
+import FilterableTable from './components/FilterableTable';
 
 function App() {
 
+  const { isLoading, hasError, movies } = useSwapiApi();
   const [selectedMovie, setSelectedMovie] = useState(null);
-  const { isLoading, hasError, data: movies } = useSwapiApi();
+
+  const { isLoadingCharacters, fetchCharacterError, characters } = useSelectedMovie({
+    charactersUrl: selectedMovie ? selectedMovie.characters : []
+  });
+  
+  console.log('==>', characters);
+
+  const handleMovieSelection = (e) => {
+    const selectedTitle = e.target.value;
+    const movie = movies.find(m => m.title === selectedTitle);
+    setSelectedMovie(movie);
+  }
+
+  const handlerGenderFilter = (e) => {
+
+  }
 
   return (
     
     <div className="wrapper">
       <div className="main">
         <img src={logo} alt="Star Wars logo" />
-        <MovieDropDown placeholder="Select a Movie"/>
-        <MovieDropDown placeholder="Filter Gender"/>
-        <table>
-          <thead>
-            <tr>
-              <th><div>Name</div></th>
-              <th><div>Gender</div></th>
-              <th><div>Height(cm)</div></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Timi Tejumola</td>
-              <td>Male</td>
-              <td>8.3cm</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-            <tr>
-              <td>Beru Whitesun lars</td>
-              <td>Female</td>
-              <td>8.167</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td>
-                <div>
-                  <p>Total Character</p>
-                  23
-                </div>
-              </td>
-              <td></td>
-              <td>
-                <div>
-                  <p>Total Height</p>
-                  170cm (5ft/6.93in)
-                </div>
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+        <MovieDropDown
+          isLoading={isLoading}
+          onChange={handleMovieSelection} 
+          data={movies}
+        />
+        {
+          characters.length > 0 && (
+            <div className="custom-select">
+              <select onChange={handlerGenderFilter} defaultValue="Select">
+                    <option value="all">Filter Gender (All)</option>
+                    <option value="male" >Male</option>
+                    <option value="female">Female</option>
+                    <option value="n/a">N/A</option>
+                    <option value="hermaphrodite">Hermaphrodite</option>
+                </select>
+            </div>
+          )
+        }
+        {
+          !isLoadingCharacters && (
+            <FilterableTable
+              data={characters}
+            />
+          )
+        }
       </div>
     </div>
   );

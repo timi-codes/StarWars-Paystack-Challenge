@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { sortMovieList } from '../utils';
-
+import { sortMovieByDate } from '../utils';
+import axios from 'axios';
 
 /**
  * custom hooks to fetch list movie
@@ -11,23 +11,56 @@ export const useSwapiApi = () => {
     const [hasError, setErrors] = useState(false);
     const [movies, setMovies] = useState([]);
 
-    async function fetchData() {
+    async function fetchMovies() {
         setIsLoading(true);
 
         const res = await fetch("https://swapi.co/api/films");
         res
         .json()
         .then(response => {
-            const sortedList = sortMovieList(response.results);
+            const sortedList = sortMovieByDate(response.results);
             setMovies(sortedList)
             setIsLoading(false);
         })
         .catch(error => setErrors(error));
     };
 
+
     useEffect(() => {
-        fetchData();
+        fetchMovies();
     }, [hasError]);
 
-    return { isLoading, hasError, movies }
+    return { isLoading, setIsLoading, hasError, movies }
 };
+
+export const useSelectedMovie = ({ charactersUrl }) => {
+    const [isLoadingCharacters, setLoadingCharacters] = useState(false);
+    const [characters, setCharacters] = useState([]);
+    const [fetchCharacterError, setFetchCharacterError] = useState(false);
+
+
+    useEffect(() => {
+        setLoadingCharacters(true);
+
+        if (charactersUrl.length > 0) {
+            const req = charactersUrl.map(url => 
+                axios.get(url)
+                    .then(response => {
+                        return response.data
+                })
+            );
+    
+            Promise.all(req)
+                .then(responses => {
+                    setCharacters(responses);
+                    setLoadingCharacters(false);
+                })
+                .catch(error => {
+                    console.log(error);
+                    setFetchCharacterError(error);
+                });
+        }
+    }, [charactersUrl, fetchCharacterError]);
+
+    return { isLoadingCharacters, fetchCharacterError, characters }
+}

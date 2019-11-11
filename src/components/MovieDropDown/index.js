@@ -1,14 +1,24 @@
 import React from 'react';
+import Loading from '../Loading';
 import './moviedropdown.css';
 
-const MovieDropDown = ({data, placeholder}) => {
+const MovieDropDown = ({ isLoading, data, placeholder, onChange }) => {
+
+    if ( isLoading ) {
+        return <Loading />
+    }
+
     return (
         <div className="custom-select">
-          <select>
-                <option value="" selected disabled hidden>{placeholder} ...</option>
-                <option value="">A New Hope</option>
-                <option value="">The Empire strike back</option>
-                <option value="">Return of Jedi</option>
+            <select onChange={onChange} defaultValue="Select">
+                <option value="Select" disabled>Select a Movie ...</option>
+                {
+                    data.map((movie) => (
+                        <option key={movie.release_date} value={movie.title}>
+                            {movie.title} 2000
+                        </option>
+                    ))
+                }
             </select>
         </div>
     );
