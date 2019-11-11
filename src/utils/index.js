@@ -7,4 +7,8 @@ export const sortMovieByDate = (data) => {
     })
 }
 
-// export const calculate
+export const convertHeight = (cm) => {
+    const valueInInches = cm / 2.54;
+    const valueInFeet = cm / 30.48;
+    return { cm , valueInInches, valueInFeet}
+}

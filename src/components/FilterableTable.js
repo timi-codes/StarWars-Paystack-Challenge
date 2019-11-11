@@ -1,8 +1,16 @@
 import React from 'react';
-
+import { convertHeight } from '../utils';
 
 
 const FilterableTable = ({ data }) => {
+
+    let heights = data.map(c => parseInt(c.height, 10));
+    let filteredHeights = heights.filter(height => Number.isInteger(height));
+    const totalHeight = filteredHeights.reduce((acc, value) => acc + value, 0)
+    
+    const { valueInInches, valueInFeet } = convertHeight(totalHeight);
+    const formattedHeight = `${totalHeight}cm (${valueInFeet.toFixed(2)}ft/${valueInInches.toFixed(2)})in`;
+    
     return (
         <div>
             <table>
@@ -37,7 +45,7 @@ const FilterableTable = ({ data }) => {
                     <td>
                     <div>
                         <p>Total Height</p>
-                        170cm (5ft/6.93in)
+                        {formattedHeight}
                     </div>
                     </td>
                 </tr>
