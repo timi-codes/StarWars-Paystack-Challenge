@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSwapiApi, useSelectedMovie} from './hooks'
 import logo from './assets/starwars-logo.png';
 import './App.css';
@@ -14,8 +14,14 @@ function App() {
   const { isLoadingCharacters, fetchCharacterError, characters } = useSelectedMovie({
     charactersUrl: selectedMovie ? selectedMovie.characters : []
   });
-  
-  console.log('==>', characters);
+
+  // const [filteredCharacter, setFilteredCharacter] = useState([]);
+
+  // useEffect(() => {
+  //   setFilteredCharacter(characters)
+  // }, [characters]);
+
+  // console.log(filteredCharacter);
 
   const handleMovieSelection = (e) => {
     const selectedTitle = e.target.value;
@@ -23,33 +29,21 @@ function App() {
     setSelectedMovie(movie);
   }
 
-  const handlerGenderFilter = (e) => {
-
-  }
-
   return (
     
     <div className="wrapper">
       <div className="main">
-        <img src={logo} alt="Star Wars logo" />
+        <img id="logo" src={logo} alt="Star Wars logo" />
         <MovieDropDown
           isLoading={isLoading}
           onChange={handleMovieSelection} 
           data={movies}
         />
-        {
+        {/* {
           characters.length > 0 && (
-            <div className="custom-select">
-              <select onChange={handlerGenderFilter} defaultValue="Select">
-                    <option value="all">Filter Gender (All)</option>
-                    <option value="male" >Male</option>
-                    <option value="female">Female</option>
-                    <option value="n/a">N/A</option>
-                    <option value="hermaphrodite">Hermaphrodite</option>
-                </select>
-            </div>
+
           )
-        }
+        } */}
         {
           !isLoadingCharacters && (
             <FilterableTable
@@ -61,5 +55,6 @@ function App() {
     </div>
   );
 }
+
 
 export default App;
