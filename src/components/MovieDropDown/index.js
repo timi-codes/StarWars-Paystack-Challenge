@@ -2,7 +2,7 @@ import React from 'react';
 import Loading from '../Loading';
 import './moviedropdown.css';
 
-const MovieDropDown = ({ isLoading, data, placeholder, onChange }) => {
+const MovieDropDown = ({ isLoading, data, placeholder, onChange, value}) => {
 
     if ( isLoading ) {
         return <Loading />
@@ -10,12 +10,12 @@ const MovieDropDown = ({ isLoading, data, placeholder, onChange }) => {
 
     return (
         <div className="custom-select">
-            <select onChange={onChange} defaultValue="Select">
+            <select onChange={onChange} defaultValue="Select" value={value}>
                 <option value="Select" disabled>Select a Movie ...</option>
                 {
                     data.map((movie) => (
                         <option key={movie.release_date} value={movie.title}>
-                            {movie.title} 2000
+                            {movie.title}
                         </option>
                     ))
                 }

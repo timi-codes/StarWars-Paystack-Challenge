@@ -19,7 +19,7 @@ const FilterableTable = ({ data }) => {
         const totalHeight = filteredHeights.reduce((acc, value) => acc + value, 0)
         
         const { valueInInches, valueInFeet } = convertHeight(totalHeight);
-        return  `${totalHeight}cm (${valueInFeet.toFixed(2)}ft/${valueInInches.toFixed(2)})in`;
+        return  `${totalHeight}cm (${valueInFeet.toFixed(2)}ft/${valueInInches.toFixed(2)}in)`;
     }
 
     const sort = (field, type) => {
@@ -77,7 +77,7 @@ const FilterableTable = ({ data }) => {
     }
     
     return (
-        <div>
+        <>
             <div className="custom-select">
                <select onChange={handlerGenderFilter} defaultValue="Select">
                     <option value="all">Filter Gender (All)</option>
@@ -129,8 +129,7 @@ const FilterableTable = ({ data }) => {
                         { newData.length }
                     </div>
                     </td>
-                    <td></td>
-                    <td>
+                    <td colSpan="2">
                     <div>
                         <p>Total Height</p>
                         {calculateHeight()}
@@ -139,7 +138,7 @@ const FilterableTable = ({ data }) => {
                 </tr>
                 </tfoot>
              </table>
-        </div>
+        </>
     )
 };
 

@@ -1,54 +1,70 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useSwapiApi, useSelectedMovie} from './hooks'
 import logo from './assets/starwars-logo.png';
 import './App.css';
 
 import MovieDropDown from './components/MovieDropDown'
 import FilterableTable from './components/FilterableTable';
+import OpenCrawl from './components/OpenCrawl';
 
 function App() {
 
   const { isLoading, hasError, movies } = useSwapiApi();
-  const [selectedMovie, setSelectedMovie] = useState(null);
+  const selectedMovie = useRef(null);
+  const [showOpenCrawl, setShowOpenCrawl] = useState(false);
 
   const { isLoadingCharacters, fetchCharacterError, characters } = useSelectedMovie({
-    charactersUrl: selectedMovie ? selectedMovie.characters : []
+    charactersUrl: selectedMovie.current ? selectedMovie.current.characters : []
   });
 
-  // const [filteredCharacter, setFilteredCharacter] = useState([]);
+  useEffect(() => {
+    let timeoutId = setTimeout(() => {
+      if (selectedMovie.current) {
+        setShowOpenCrawl(false)
+      }
+    }, 20000);
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [showOpenCrawl]);
 
-  // useEffect(() => {
-  //   setFilteredCharacter(characters)
-  // }, [characters]);
-
-  // console.log(filteredCharacter);
 
   const handleMovieSelection = (e) => {
     const selectedTitle = e.target.value;
     const movie = movies.find(m => m.title === selectedTitle);
-    setSelectedMovie(movie);
+    selectedMovie.current = movie;
+    setShowOpenCrawl(true)
   }
+
 
   return (
     
     <div className="wrapper">
       <div className="main">
-        <img id="logo" src={logo} alt="Star Wars logo" />
-        <MovieDropDown
-          isLoading={isLoading}
-          onChange={handleMovieSelection} 
-          data={movies}
-        />
-        {/* {
-          characters.length > 0 && (
-
-          )
-        } */}
         {
-          !isLoadingCharacters && (
-            <FilterableTable
-              data={characters}
-            />
+          (hasError || fetchCharacterError) && (<div id="error">Something went wrong. Kindly refresh the page </div>)
+        }
+        {
+          showOpenCrawl ? (<OpenCrawl data={selectedMovie}/>) : (
+            <>
+              <img id="logo" src={logo} alt="Star Wars logo" />
+              { !isLoadingCharacters && (<button id="playCrawl" onClick={()=>setShowOpenCrawl(true)}>Play Crawl</button>)}
+           
+              <MovieDropDown
+              isLoading={isLoading}
+              onChange={handleMovieSelection} 
+              data={movies}
+              value={selectedMovie.current ? selectedMovie.current.title : "Select"}
+              />
+
+            {
+              !isLoadingCharacters && (
+                <FilterableTable
+                    data={characters}
+                />
+              )
+            } 
+            </>
           )
         }
       </div>
