@@ -10,7 +10,7 @@ const MovieDropDown = ({ isLoading, data, placeholder, onChange, value}) => {
 
     return (
         <div className="custom-select">
-            <select onChange={onChange} defaultValue="Select" value={value}>
+            <select onChange={onChange} value={value}>
                 <option value="Select" disabled>Select a Movie ...</option>
                 {
                     data.map((movie) => (

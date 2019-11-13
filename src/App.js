@@ -18,7 +18,7 @@ function App() {
   });
 
   useEffect(() => {
-    let timeoutId = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (selectedMovie.current) {
         setShowOpenCrawl(false)
       }

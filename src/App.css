@@ -21,6 +21,7 @@ table {
   z-index: 5;
   margin-top: 2rem;
   margin-bottom: 4rem
+  bor
 }
 
 th {
@@ -44,20 +45,23 @@ th button:focus {
 
 th img {
   margin-left: 1rem;
+  pointer-events: none;
 }
 
 th img[data-toggle="desc"] {
   transform: rotate(180deg);
   margin-left: 1rem;
+  pointer-events: none;
 }
 
 th img[data-toggle="none"] {
   visibility: hidden;
+  pointer-events: none;
 }
 
 tbody td {
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 204, 24, 0.1);
   color: white;
 }
 

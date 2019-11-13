@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { sortMovieByDate } from '../utils';
 import axios from 'axios';
 
@@ -14,40 +14,42 @@ export const useSwapiApi = () => {
     async function fetchMovies() {
         setIsLoading(true);
 
-        const res = await fetch("https://swapi.co/api/films");
-        res
-        .json()
+        axios.get("https://swapi.co/api/films")
         .then(response => {
-            const sortedList = sortMovieByDate(response.results);
+            const sortedList = sortMovieByDate(response.data.results);
             setMovies(sortedList)
             setIsLoading(false);
         })
         .catch(error => setErrors(error));
     };
 
-
     useEffect(() => {
         fetchMovies();
     }, [hasError]);
 
-    return { isLoading, setIsLoading, hasError, movies }
+    return { isLoading, setIsLoading, hasError, movies };
 };
 
 export const useSelectedMovie = ({ charactersUrl }) => {
     const [isLoadingCharacters, setLoadingCharacters] = useState(false);
     const [characters, setCharacters] = useState([]);
     const [fetchCharacterError, setFetchCharacterError] = useState(false);
+    const previousSelection = useRef();
 
+    useEffect(() => {
+        previousSelection.current = charactersUrl;
+    }, [charactersUrl]);
+    
 
     useEffect(() => {
         setLoadingCharacters(true);
 
-        if (charactersUrl.length > 0) {
-            const req = charactersUrl.map(url => 
+        if (charactersUrl.length > 0 ) {
+            const req = charactersUrl.map(url =>
                 axios.get(url)
                     .then(response => {
                         return response.data
-                })
+                    })
             );
     
             Promise.all(req)
@@ -56,11 +58,10 @@ export const useSelectedMovie = ({ charactersUrl }) => {
                     setLoadingCharacters(false);
                 })
                 .catch(error => {
-                    console.log(error);
                     setFetchCharacterError(error);
                 });
         }
     }, [charactersUrl, fetchCharacterError]);
 
     return { isLoadingCharacters, fetchCharacterError, characters }
-}
+};

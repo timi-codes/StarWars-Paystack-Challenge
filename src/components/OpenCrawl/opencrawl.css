@@ -5,7 +5,10 @@
       top: 30%;
       z-index: 1000;
       animation: intro 5s ease-out 1s;
-      color: rgb(54, 24, 224);
+      color: #FFCC18;
+      -webkit-text-fill-color: #FFCC18; 
+      -webkit-text-stroke-width: 1px;
+      -webkit-text-stroke-color: white;
       font-weight: 400;
       font-size: 300%;
       opacity: 0;
