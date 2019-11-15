@@ -30,19 +30,24 @@ export const useSwapiApi = () => {
     return { isLoading, setIsLoading, hasError, movies };
 };
 
-export const useSelectedMovie = ({ charactersUrl }) => {
+export const useSelectedMovie = ({ selected }) => {
     const [isLoadingCharacters, setLoadingCharacters] = useState(false);
     const [characters, setCharacters] = useState([]);
     const [fetchCharacterError, setFetchCharacterError] = useState(false);
-    const previousSelection = useRef();
+    const previousSelections = useRef([]);
 
-    useEffect(() => {
-        previousSelection.current = charactersUrl;
-    }, [charactersUrl]);
-    
+    const charactersUrl = selected ? selected.characters : [];
+
+    // const alreadyFetched = previousSelections.current.filter((title) => title === selected.title);
+    // console.log("===>", alreadyFetched);
 
     useEffect(() => {
         setLoadingCharacters(true);
+
+        // if (alreadyFetched.length > 0) {
+        //     setCharacters(alreadyFetched[0]);
+        //     console.log('xxxx')
+        // }
 
         if (charactersUrl.length > 0 ) {
             const req = charactersUrl.map(url =>
@@ -56,12 +61,17 @@ export const useSelectedMovie = ({ charactersUrl }) => {
                 .then(responses => {
                     setCharacters(responses);
                     setLoadingCharacters(false);
+
+                    previousSelections.current.push({
+                        title: selected.title,
+                        characters: responses
+                    })
                 })
                 .catch(error => {
                     setFetchCharacterError(error);
                 });
         }
-    }, [charactersUrl, fetchCharacterError]);
+    }, [charactersUrl, fetchCharacterError, selected]);
 
     return { isLoadingCharacters, fetchCharacterError, characters }
 };

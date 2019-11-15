@@ -14,19 +14,21 @@ function App() {
   const [showOpenCrawl, setShowOpenCrawl] = useState(false);
 
   const { isLoadingCharacters, fetchCharacterError, characters } = useSelectedMovie({
-    charactersUrl: selectedMovie.current ? selectedMovie.current.characters : []
+    selected: selectedMovie.current ? selectedMovie.current : null
   });
 
+
   useEffect(() => {
+
     const timeoutId = setTimeout(() => {
       if (selectedMovie.current) {
         setShowOpenCrawl(false)
       }
-    }, 20000);
+    }, 3000);
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [showOpenCrawl]);
+  }, [characters,showOpenCrawl]);
 
 
   const handleMovieSelection = (e) => {

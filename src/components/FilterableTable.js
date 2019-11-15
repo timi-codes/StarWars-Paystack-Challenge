@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { calculateHeight, sortedBy, sort } from '../utils';
 import toogleIcon from '../assets/toogle-icon.svg';
 
@@ -7,6 +7,15 @@ const FilterableTable = ({ data }) => {
 
     const [sortType, setSortType] = useState({ field: "", type: "" });
     const [newData, setNewData] = useState(data);
+    const genderSet = useRef(new Set());
+    const gendersToArray = useRef([]);
+
+
+    data.map((item) => {
+        genderSet.current.add(item.gender);
+    });
+
+    gendersToArray.current = Array.from(genderSet.current);
 
     useEffect(() => {
         setNewData(data)
@@ -52,10 +61,11 @@ const FilterableTable = ({ data }) => {
             <div className="custom-select">
                <select onChange={handleGenderFilter} defaultValue="Select">
                     <option value="all">Filter Gender (All)</option>
-                    <option value="male" >Male</option>
-                    <option value="female">Female</option>
-                    <option value="n/a">N/A</option>
-                    <option value="hermaphrodite">Hermaphrodite</option>
+                    {                    
+                        gendersToArray.current.map((item) => (
+                            <option key={item} value={item}>{`${item.charAt(0).toUpperCase()}${item.slice(1)}`}</option>
+                        ))
+                    }
                 </select>
             </div>
             <table>
